@@ -6,7 +6,4 @@ set -e
 rm -rf dist
 
 # Package the extension
-npx vsce package --allow-package-secrets sendgrid
-
-# Move the packaged extension to the dist directory
-mv cline*.vsix dist/cline.vsix
+npx vsce package --allow-package-secrets sendgrid --out ./dist/cline.vsix
