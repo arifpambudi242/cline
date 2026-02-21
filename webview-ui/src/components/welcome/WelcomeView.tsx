@@ -1,5 +1,5 @@
 import { BooleanRequest, EmptyRequest } from "@shared/proto/cline/common"
-import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { memo, useEffect, useState } from "react"
 import ClineLogoWhite from "@/assets/ClineLogoWhite"
 import ApiOptions from "@/components/settings/ApiOptions"
@@ -44,18 +44,13 @@ const WelcomeView = memo(() => {
 					<ClineLogoWhite className="size-16" />
 				</div>
 				<p>
-					I can do all kinds of tasks thanks to breakthroughs in{" "}
-					<VSCodeLink className="inline" href="https://www.anthropic.com/claude/sonnet">
-						Claude 4.6 Sonnet's
-					</VSCodeLink>
-					agentic coding capabilities and access to tools that let me create & edit files, explore complex projects, use
-					a browser, and execute terminal commands <i>(with your permission, of course)</i>. I can even use MCP to
-					create new tools and extend my own capabilities.
+					I can help you with coding tasks thanks to powerful AI capabilities and access to tools that let me create &
+					edit files, explore projects, use a browser, and execute terminal commands{" "}
+					<i>(with your permission, of course)</i>.
 				</p>
 
 				<p className="text-(--vscode-descriptionForeground)">
-					Sign up for an account to get started for free, or use an API key that provides access to models like Claude
-					Sonnet.
+					Get started for free and experience the power of AI-assisted coding.
 				</p>
 
 				<VSCodeButton appearance="primary" className="w-full mt-1" disabled={isLoading} onClick={handleLogin}>

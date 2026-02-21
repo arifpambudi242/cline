@@ -2,11 +2,10 @@ import type { UsageTransaction as ClineAccountUsageTransaction, PaymentTransacti
 import { isClineInternalTester } from "@shared/internal/account"
 import type { UserOrganization } from "@shared/proto/cline/account"
 import { EmptyRequest } from "@shared/proto/cline/common"
-import { VSCodeButton, VSCodeDivider, VSCodeDropdown, VSCodeOption, VSCodeTag } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeDivider, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useInterval } from "react-use"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { type ClineUser, handleSignOut } from "@/context/ClineAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient } from "@/services/grpc-client"
@@ -14,10 +13,7 @@ import ViewHeader from "../common/ViewHeader"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import { updateSetting } from "../settings/utils/settingsHandlers"
 import { AccountWelcomeView } from "./AccountWelcomeView"
-import { CreditBalance } from "./CreditBalance"
-import CreditsHistoryTable from "./CreditsHistoryTable"
-import { convertProtoUsageTransactions, getClineUris, getMainRole } from "./helpers"
-import { RemoteConfigToggle } from "./RemoteConfigToggle"
+import { convertProtoUsageTransactions, getClineUris } from "./helpers"
 
 type AccountViewProps = {
 	clineUser: ClineUser | null
@@ -306,51 +302,15 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 			<div className="flex flex-col h-full">
 				<div className="flex flex-col w-full gap-1 mb-6">
 					<div className="flex items-center flex-wrap gap-y-4">
-						{/* {user.photoUrl ? (
-								<img src={user.photoUrl} alt="Profile" className="size-16 rounded-full mr-4" />
-							) : ( */}
 						<div className="size-16 rounded-full bg-button-background flex items-center justify-center text-2xl text-button-foreground mr-4">
 							{displayName?.[0] || email?.[0] || "?"}
 						</div>
-						{/* )} */}
 
 						<div className="flex flex-col">
 							{displayName && <h2 className="text-foreground m-0 text-lg font-medium">{displayName}</h2>}
 
 							{email && <div className="text-sm text-description">{email}</div>}
-
-							<div className="flex gap-2 items-center mt-1">
-								<Tooltip>
-									<TooltipTrigger>
-										<VSCodeDropdown
-											className="w-full"
-											currentValue={dropdownValue}
-											disabled={isLoading || isLockedByRemoteConfig}
-											onChange={handleOrganizationChange}>
-											<VSCodeOption key="personal" value={uid}>
-												Personal
-											</VSCodeOption>
-											{userOrganizations?.map((org: UserOrganization) => (
-												<VSCodeOption key={org.organizationId} value={org.organizationId}>
-													{org.name}
-												</VSCodeOption>
-											))}
-										</VSCodeDropdown>
-									</TooltipTrigger>
-									<TooltipContent hidden={!isLockedByRemoteConfig}>
-										This cannot be changed while your organization has remote configuration enabled.
-									</TooltipContent>
-								</Tooltip>
-								{activeOrganization && (
-									<VSCodeTag className="text-xs p-2" title="Role">
-										{getMainRole(activeOrganization.roles)}
-									</VSCodeTag>
-								)}
-							</div>
 						</div>
-					</div>
-					<div className="w-full flex gap-2 flex-col min-[225px]:flex-row">
-						<RemoteConfigToggle activeOrganization={activeOrganization} />
 					</div>
 				</div>
 
@@ -367,23 +327,8 @@ export const ClineAccountView = ({ clineUser, userOrganizations, activeOrganizat
 
 				<VSCodeDivider className="w-full my-6" />
 
-				<CreditBalance
-					balance={balance}
-					creditUrl={getClineUris(clineUrl, "credits", dropdownValue === uid ? "account" : "organization")}
-					fetchCreditBalance={() => fetchCreditBalance(dropdownValue)}
-					isLoading={isLoading}
-					lastFetchTime={lastFetchTime}
-				/>
-
-				<VSCodeDivider className="mt-6 mb-3 w-full" />
-
-				<div className="grow flex flex-col min-h-0 pb-[0px]">
-					<CreditsHistoryTable
-						isLoading={isLoading}
-						paymentsData={paymentsData}
-						showPayments={dropdownValue === uid}
-						usageData={usageData}
-					/>
+				<div className="text-center text-sm text-description">
+					Enjoy using Cline for free! Upgrade for more features if needed.
 				</div>
 
 				{/* Hide environment switching UI when in self-hosted mode */}
