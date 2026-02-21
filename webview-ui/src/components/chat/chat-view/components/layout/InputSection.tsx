@@ -43,7 +43,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
 	return (
 		<>
 			{activeQuote && (
-				<div style={{ marginBottom: "-12px", marginTop: "10px" }}>
+				<div className="animate-in slide-in-from-top-2 duration-200" style={{ marginBottom: "-12px", marginTop: "10px" }}>
 					<QuotedMessagePreview
 						isFocused={isTextAreaFocused}
 						onDismiss={() => setActiveQuote(null)}

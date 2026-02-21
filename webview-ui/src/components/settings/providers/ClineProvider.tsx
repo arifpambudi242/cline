@@ -9,7 +9,7 @@ interface ClineProviderProps {
 	showModelOptions: boolean
 	isPopup?: boolean
 	currentMode: Mode
-	initialModelTab?: "recommended" | "free"
+	initialModelTab?: "free"
 }
 
 /**

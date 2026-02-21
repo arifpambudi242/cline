@@ -74,16 +74,16 @@ export const ThinkingIndicator: React.FC<ThinkingIndicatorProps> = ({ mode = "ac
 	const spinnerChar = SPINNER_FRAMES[spinnerFrame]
 	const fullText = `${spinnerChar} ${message}...`
 
-	// Animate spinner
+	// Animate spinner with smoother timing
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setSpinnerFrame((prev) => (prev + 1) % SPINNER_FRAMES.length)
-		}, 80)
+		}, 70) // Slightly faster for smoother animation
 
 		return () => clearInterval(interval)
 	}, [])
 
-	// Animate shimmer
+	// Animate shimmer with smoother timing
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setShimmerPos((prev) => {
@@ -93,7 +93,7 @@ export const ThinkingIndicator: React.FC<ThinkingIndicatorProps> = ({ mode = "ac
 				}
 				return next
 			})
-		}, 100)
+		}, 80) // Faster shimmer for better visual feedback
 
 		return () => clearInterval(interval)
 	}, [fullText.length])
@@ -120,7 +120,20 @@ export const ThinkingIndicator: React.FC<ThinkingIndicatorProps> = ({ mode = "ac
 	return (
 		<Box paddingLeft={1}>
 			<ShimmerText color={color} shimmerPos={shimmerPos} text={fullText} />
-			{elapsedStr && <Text color="gray"> ({elapsedStr} · esc to interrupt)</Text>}
+			{elapsedStr && (
+				<Text color="gray">
+					{" "}
+					(
+					<Text bold color="cyan">
+						{elapsedStr}
+					</Text>{" "}
+					·{" "}
+					<Text bold color="red">
+						esc
+					</Text>{" "}
+					to interrupt)
+				</Text>
+			)}
 		</Box>
 	)
 }

@@ -205,7 +205,7 @@ export const MessagesArea: React.FC<MessagesAreaProps> = ({
 			{/* Sticky User Message - positioned absolutely to avoid layout shifts */}
 			<div
 				className={cn(
-					"absolute top-0 left-0 right-0 z-10 pl-[15px] pr-[14px] bg-background",
+					"absolute top-0 left-0 right-0 z-10 pl-[15px] pr-[14px] bg-background transition-all duration-200",
 					scrolledPastUserMessage && "pb-2",
 				)}>
 				<StickyUserMessage
@@ -225,7 +225,7 @@ export const MessagesArea: React.FC<MessagesAreaProps> = ({
 						setShowScrollToBottom(disableAutoScrollRef.current && !isAtBottom)
 					}}
 					atBottomThreshold={10} // trick to make sure virtuoso re-renders when task changes, and we use initialTopMostItemIndex to start at the bottom
-					className="scrollable grow overflow-y-scroll"
+					className="scrollable grow overflow-y-scroll scroll-smooth"
 					components={virtuosoComponents}
 					data={displayedGroupedMessages}
 					// increasing top by 3_000 to prevent jumping around when user collapses a row

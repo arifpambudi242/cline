@@ -12,7 +12,7 @@ import { useApiConfigurationHandlers } from "../utils/useApiConfigurationHandler
 
 interface ApiConfigurationSectionProps {
 	renderSectionHeader?: (tabId: string) => JSX.Element | null
-	initialModelTab?: "recommended" | "free"
+	initialModelTab?: "free"
 }
 
 const ApiConfigurationSection = ({ renderSectionHeader, initialModelTab }: ApiConfigurationSectionProps) => {

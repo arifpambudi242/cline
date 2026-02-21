@@ -194,7 +194,7 @@ const errorTypes = ["api_req_failed", "mistake_limit_reached"]
 /**
  * Get button configuration based on message type and state
  */
-export function getButtonConfig(message: ClineMessage | undefined, isStreaming: boolean = false): ButtonConfig {
+export function getButtonConfig(message: ClineMessage | undefined, isStreaming = false): ButtonConfig {
 	if (!message) {
 		return BUTTON_CONFIGS.default
 	}
@@ -314,15 +314,19 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ config, mode = "ac
 
 	const modeColor = mode === "plan" ? "yellow" : COLORS.primaryBlue
 
-	const renderButton = (text: string, shortcut: string) => {
+	const renderButton = (text: string, shortcut: string, isPrimary: boolean) => {
 		const label = ` ${text} (${shortcut}) `
 		const padding = Math.max(0, buttonWidth - label.length)
 		const leftPad = Math.floor(padding / 2)
 		const rightPad = padding - leftPad
 		const paddedLabel = " ".repeat(leftPad) + label + " ".repeat(rightPad)
 
+		// Use different styling for primary vs secondary buttons
+		const bgColor = isPrimary ? modeColor : "gray"
+		const fgColor = isPrimary ? "black" : "white"
+
 		return (
-			<Text backgroundColor={modeColor} color="black">
+			<Text backgroundColor={bgColor} bold={isPrimary} color={fgColor}>
 				{paddedLabel}
 			</Text>
 		)
@@ -330,8 +334,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ config, mode = "ac
 
 	return (
 		<Box flexDirection="row" gap={1} marginLeft={1} width="100%">
-			{hasPrimary && renderButton(config.primaryText!, "1")}
-			{hasSecondary && renderButton(config.secondaryText!, hasPrimary ? "2" : "1")}
+			{hasPrimary && renderButton(config.primaryText!, "1", true)}
+			{hasSecondary && renderButton(config.secondaryText!, hasPrimary ? "2" : "1", false)}
 		</Box>
 	)
 }

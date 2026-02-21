@@ -48,33 +48,10 @@ export interface OpenRouterModelPickerProps {
 	isPopup?: boolean
 	currentMode: Mode
 	showProviderRouting?: boolean
-	initialTab?: "recommended" | "free"
+	initialTab?: "free"
 }
 
-// Featured models for Cline provider organized by tabs
-export const recommendedModels = [
-	{
-		id: "google/gemini-3.1-pro-preview",
-		description: "Latest Gemini release with 1m ctx window and strong coding performance",
-		label: "NEW",
-	},
-	{
-		id: "anthropic/claude-sonnet-4.6",
-		description: "Latest Sonnet release with strong coding and agent performance",
-		label: "NEW",
-	},
-	{
-		id: "anthropic/claude-opus-4.6",
-		description: "Most intelligent model for agents and coding",
-		label: "BEST",
-	},
-	{
-		id: "openai/gpt-5.2-codex",
-		description: "OpenAI's latest with strong coding abilities",
-		label: "HOT",
-	},
-]
-
+// Featured models for Cline provider - free models only
 export const freeModels = [
 	{
 		id: "minimax/minimax-m2.5",
@@ -112,18 +89,17 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 	const [searchTerm, setSearchTerm] = useState(modeFields.openRouterModelId || openRouterDefaultModelId)
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)
-	const [activeTab, setActiveTab] = useState<"recommended" | "free">(() => {
+	const [activeTab, setActiveTab] = useState<"free">(() => {
 		if (initialTab) {
-			return initialTab
+			return initialTab as "free"
 		}
-		const currentModelId = modeFields.openRouterModelId || openRouterDefaultModelId
-		return freeModels.some((m) => m.id === currentModelId) ? "free" : "recommended"
+		return "free"
 	})
 
-	// If a caller wants to deep-link to the Free tab (or Recommended), honor that.
+	// If a caller wants to deep-link to the Free tab, honor that.
 	useEffect(() => {
 		if (initialTab) {
-			setActiveTab(initialTab)
+			setActiveTab(initialTab as "free")
 		}
 	}, [initialTab])
 	const dropdownRef = useRef<HTMLDivElement>(null)
@@ -335,9 +311,6 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 					<>
 						{/* Tabs */}
 						<TabsContainer style={{ marginTop: 4 }}>
-							<Tab active={activeTab === "recommended"} onClick={() => setActiveTab("recommended")}>
-								Recommended
-							</Tab>
 							<Tab active={activeTab === "free"} onClick={() => setActiveTab("free")}>
 								Free
 							</Tab>
@@ -345,20 +318,6 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 
 						{/* Model Cards */}
 						<div style={{ marginBottom: "6px" }}>
-							{activeTab === "recommended" &&
-								recommendedModels.map((model) => (
-									<FeaturedModelCard
-										description={model.description}
-										isSelected={selectedModelId === model.id}
-										key={model.id}
-										label={model.label}
-										modelId={model.id}
-										onClick={() => {
-											handleModelChange(model.id)
-											setIsDropdownVisible(false)
-										}}
-									/>
-								))}
 							{activeTab === "free" &&
 								freeModels.map((model) => (
 									<FeaturedModelCard

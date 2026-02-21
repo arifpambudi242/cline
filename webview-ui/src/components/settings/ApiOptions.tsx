@@ -61,7 +61,7 @@ interface ApiOptionsProps {
 	modelIdErrorMessage?: string
 	isPopup?: boolean
 	currentMode: Mode
-	initialModelTab?: "recommended" | "free"
+	initialModelTab?: "free"
 }
 
 // This is necessary to ensure dropdown opens downward, important for when this is used in popup

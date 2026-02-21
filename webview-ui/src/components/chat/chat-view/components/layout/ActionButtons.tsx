@@ -133,7 +133,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 				<VSCodeButton
 					appearance="icon"
 					aria-label={showScrollToBottom ? "Scroll to bottom" : "Scroll to top"}
-					className="text-lg text-(--vscode-primaryButton-foreground) bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_55%,transparent)] rounded-[3px] overflow-hidden cursor-pointer flex justify-center items-center flex-1 h-[25px] hover:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_90%,transparent)] active:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_70%,transparent)] border-0"
+					className="text-lg text-(--vscode-primaryButton-foreground) bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_55%,transparent)] rounded-[3px] overflow-hidden cursor-pointer flex justify-center items-center flex-1 h-[25px] hover:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_90%,transparent)] active:bg-[color-mix(in_srgb,var(--vscode-toolbar-hoverBackground)_70%,transparent)] border-0 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95"
 					onClick={showScrollToBottom ? handleScrollToBottom : handleScrollToTop}
 					onKeyDown={(e) => {
 						if (e.key === "Enter" || e.key === " ") {
@@ -146,9 +146,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 						}
 					}}>
 					{showScrollToBottom ? (
-						<span className="codicon codicon-chevron-down" />
+						<span className="codicon codicon-chevron-down transition-transform duration-150" />
 					) : (
-						<span className="codicon codicon-chevron-up" />
+						<span className="codicon codicon-chevron-up transition-transform duration-150" />
 					)}
 				</VSCodeButton>
 			</div>
@@ -158,11 +158,15 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 	const opacity = canInteract || isStreaming ? 1 : 0.5
 
 	return (
-		<div className="flex px-3.5" style={{ opacity }}>
+		<div className="flex px-3.5 transition-opacity duration-200" style={{ opacity }}>
 			{primaryText && primaryAction && (
 				<VSCodeButton
 					appearance="primary"
-					className={secondaryText ? "flex-1 mr-[6px]" : "flex-2"}
+					className={
+						secondaryText
+							? "flex-1 mr-[6px] transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+							: "flex-2 transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+					}
 					disabled={!canInteract}
 					onClick={() => handleActionClick(primaryAction, inputValue, selectedImages, selectedFiles)}>
 					{primaryText}
@@ -171,7 +175,11 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 			{secondaryText && secondaryAction && (
 				<VSCodeButton
 					appearance="secondary"
-					className={primaryText ? "flex-1" : "flex-2"}
+					className={
+						primaryText
+							? "flex-1 transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+							: "flex-2 transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+					}
 					disabled={!canInteract}
 					onClick={() => handleActionClick(secondaryAction, inputValue, selectedImages, selectedFiles)}>
 					{secondaryText}
