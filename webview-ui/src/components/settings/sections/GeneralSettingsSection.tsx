@@ -10,7 +10,7 @@ interface GeneralSettingsSectionProps {
 }
 
 const GeneralSettingsSection = ({ renderSectionHeader }: GeneralSettingsSectionProps) => {
-	const { telemetrySetting, remoteConfigSettings } = useExtensionState()
+	const { telemetrySetting, remoteConfigSettings, indonesianCommitMode } = useExtensionState()
 
 	return (
 		<div>
@@ -58,6 +58,23 @@ const GeneralSettingsSection = ({ renderSectionHeader }: GeneralSettingsSectionP
 							privacy policy
 						</VSCodeLink>{" "}
 						for more details.
+					</p>
+				</div>
+
+				<div className="mb-[5px]">
+					<div className="flex items-center gap-2 mb-[5px]">
+						<VSCodeCheckbox
+							checked={indonesianCommitMode || false}
+							onChange={(e: any) => {
+								const checked = e.target.checked === true
+								updateSetting("indonesianCommitMode", checked)
+							}}>
+							Gunakan pesan commit dalam bahasa Indonesia
+						</VSCodeCheckbox>
+					</div>
+					<p className="text-sm mt-[5px] text-description">
+						Jika dicentang, pesan commit akan dibuat dalam bahasa Indonesia. Jika tidak dicentang, gunakan instruksi
+						kustom untuk format commit yang diinginkan.
 					</p>
 				</div>
 			</Section>

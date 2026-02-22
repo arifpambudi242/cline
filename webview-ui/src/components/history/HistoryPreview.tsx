@@ -118,7 +118,8 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 						style={{
 							marginRight: "4px",
 							transform: "scale(0.9)",
-						}}></span>
+						}}
+					/>
 					<span
 						style={{
 							fontWeight: 500,
@@ -164,7 +165,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 									<div className="history-meta-stack">
 										<span className="history-date">{formatDate(item.ts)}</span>
 										{item.totalCost != null && (
-											<span className="history-cost-chip">${item.totalCost.toFixed(2)}</span>
+											<span className="history-cost-chip">{item.totalCost.toFixed(2)}</span>
 										)}
 									</div>
 								</div>

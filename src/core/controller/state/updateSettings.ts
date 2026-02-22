@@ -344,6 +344,10 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("doubleCheckCompletionEnabled", request.doubleCheckCompletionEnabled)
 		}
 
+		if (request.indonesianCommitMode !== undefined) {
+			controller.stateManager.setGlobalState("indonesianCommitMode", request.indonesianCommitMode)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

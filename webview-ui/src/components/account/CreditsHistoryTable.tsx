@@ -100,7 +100,9 @@ const CreditsHistoryTable = memo(({ isLoading, usageData, paymentsData, showPaym
 										// biome-ignore lint/suspicious/noArrayIndexKey: use index as key
 										<VSCodeDataGridRow key={index}>
 											<VSCodeDataGridCell grid-column="1">{formatTimestamp(row.paidAt)}</VSCodeDataGridCell>
-											<VSCodeDataGridCell grid-column="2">{`$${formatDollars(row.amountCents)}`}</VSCodeDataGridCell>
+											<VSCodeDataGridCell grid-column="2">
+												{formatDollars(row.amountCents)}
+											</VSCodeDataGridCell>
 											<VSCodeDataGridCell grid-column="3">{`${row.credits}`}</VSCodeDataGridCell>
 										</VSCodeDataGridRow>
 									))}

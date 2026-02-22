@@ -56,22 +56,18 @@ export const freeModels = [
 	{
 		id: "minimax/minimax-m2.5",
 		description: "MiniMax-M2.5 is a lightweight, state-of-the-art LLM optimized for coding and agentic workflows",
-		label: "FREE",
 	},
 	{
 		id: "z-ai/glm-5",
 		description: "Z.AI's latest GLM 5 model with strong coding and agent performance",
-		label: "FREE",
 	},
 	{
 		id: "kwaipilot/kat-coder-pro",
 		description: "KwaiKAT's most advanced agentic coding model in the KAT-Coder series",
-		label: "FREE",
 	},
 	{
 		id: "arcee-ai/trinity-large-preview:free",
 		description: "Arcee AI's advanced large preview model in the Trinity series",
-		label: "FREE",
 	},
 ]
 
@@ -89,19 +85,6 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 	const [searchTerm, setSearchTerm] = useState(modeFields.openRouterModelId || openRouterDefaultModelId)
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)
-	const [activeTab, setActiveTab] = useState<"free">(() => {
-		if (initialTab) {
-			return initialTab as "free"
-		}
-		return "free"
-	})
-
-	// If a caller wants to deep-link to the Free tab, honor that.
-	useEffect(() => {
-		if (initialTab) {
-			setActiveTab(initialTab as "free")
-		}
-	}, [initialTab])
 	const dropdownRef = useRef<HTMLDivElement>(null)
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 	const dropdownListRef = useRef<HTMLDivElement>(null)
@@ -309,29 +292,20 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 
 				{modeFields.apiProvider === "cline" && (
 					<>
-						{/* Tabs */}
-						<TabsContainer style={{ marginTop: 4 }}>
-							<Tab active={activeTab === "free"} onClick={() => setActiveTab("free")}>
-								Free
-							</Tab>
-						</TabsContainer>
-
 						{/* Model Cards */}
 						<div style={{ marginBottom: "6px" }}>
-							{activeTab === "free" &&
-								freeModels.map((model) => (
-									<FeaturedModelCard
-										description={model.description}
-										isSelected={selectedModelId === model.id}
-										key={model.id}
-										label={model.label}
-										modelId={model.id}
-										onClick={() => {
-											handleModelChange(model.id)
-											setIsDropdownVisible(false)
-										}}
-									/>
-								))}
+							{freeModels.map((model) => (
+								<FeaturedModelCard
+									description={model.description}
+									isSelected={selectedModelId === model.id}
+									key={model.id}
+									modelId={model.id}
+									onClick={() => {
+										handleModelChange(model.id)
+										setIsDropdownVisible(false)
+									}}
+								/>
+							))}
 						</div>
 					</>
 				)}
@@ -488,8 +462,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({
 						style={{ display: "inline", fontSize: "inherit" }}>
 						anthropic/claude-sonnet-4.6.
 					</VSCodeLink>
-					You can also try searching "free" for no-cost options currently available. OpenRouter presets can be used by
-					entering @preset/your-preset-name
+					You can also search for available options. OpenRouter presets can be used by entering @preset/your-preset-name
 				</p>
 			)}
 		</div>

@@ -12,6 +12,7 @@ import { ClineAsk, ClineSay } from "@shared/ExtensionMessage"
 import { ClineContent } from "@shared/messages/content"
 import { ClineDefaultTool } from "@shared/tools"
 import { ClineAskResponse } from "@shared/WebviewMessage"
+import { freeTierGuardrail } from "@/core/guardrails/FreeTierGuardrail"
 import { isParallelToolCallingEnabled, modelDoesntSupportWebp } from "@/utils/model-utils"
 import { ToolUse } from "../assistant-message"
 import { ContextManager } from "../context/context-management/ContextManager"
@@ -400,6 +401,18 @@ export class ToolExecutor {
 				await this.removeLastPartialMessageIfExistsWithType("say", "error")
 				await this.say("error", errorMessage)
 				// Only push the final error message when the streaming is done.
+				if (!block.partial) {
+					this.pushToolResult(formatResponse.toolError(errorMessage), block)
+				}
+				return true
+			}
+
+			// Check if tool is available for free users
+			if (!freeTierGuardrail.isToolAvailableForFreeUsers(block.name)) {
+				const errorMessage = freeTierGuardrail.getRestrictedFeatureMessage(block.name)
+				await this.removeLastPartialMessageIfExistsWithType("say", "error")
+				await this.say("error", errorMessage)
+				// Only push final error message when streaming is done.
 				if (!block.partial) {
 					this.pushToolResult(formatResponse.toolError(errorMessage), block)
 				}

@@ -6,7 +6,6 @@ export interface FeaturedModelCardProps {
 	description: string
 	onClick: () => void
 	isSelected: boolean
-	label: string
 }
 
 const CardContainer = styled.div<{ isSelected: boolean }>`
@@ -35,14 +34,6 @@ const ModelName = styled.div`
 	line-height: 1.2;
 `
 
-const Label = styled.span`
-	font-size: 10px;
-	color: var(--vscode-textLink-foreground);
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	font-weight: 500;
-`
-
 const Description = styled.div`
 	margin-top: 0px;
 	font-size: 11px;
@@ -50,13 +41,10 @@ const Description = styled.div`
 	line-height: 1.2;
 `
 
-const FeaturedModelCard: React.FC<FeaturedModelCardProps> = ({ modelId, description, onClick, isSelected, label }) => {
+const FeaturedModelCard: React.FC<FeaturedModelCardProps> = ({ modelId, description, onClick, isSelected }) => {
 	return (
 		<CardContainer isSelected={isSelected} onClick={onClick}>
-			<ModelHeader>
-				<ModelName>{modelId}</ModelName>
-				<Label>{label}</Label>
-			</ModelHeader>
+			<ModelName>{modelId}</ModelName>
 			<Description>{description}</Description>
 		</CardContainer>
 	)

@@ -65,8 +65,7 @@ const formatCost = (value: number | undefined): string => {
 	const normalized = Number.isFinite(value) ? Math.max(0, value || 0) : 0
 	const maximumFractionDigits = normalized >= 0.01 ? 2 : 4
 	return Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
+		style: "decimal",
 		minimumFractionDigits: 2,
 		maximumFractionDigits,
 	}).format(normalized)

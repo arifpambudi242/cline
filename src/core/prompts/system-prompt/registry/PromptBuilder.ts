@@ -1,5 +1,6 @@
 import { Logger } from "@/shared/services/Logger"
 import type { ClineDefaultTool } from "@/shared/tools"
+import { freeTierGuardrail } from "../../../guardrails/FreeTierGuardrail"
 import { ClineToolSet } from "../registry/ClineToolSet"
 import { type ClineToolSpec, resolveInstruction } from "../spec"
 import { STANDARD_PLACEHOLDERS } from "../templates/placeholders"
@@ -156,7 +157,12 @@ export class PromptBuilder {
 			(tool) => !tool.config.contextRequirements || tool.config.contextRequirements(context),
 		)
 
-		return enabledTools
+		// Filter out premium tools for free users
+		const freeTierTools = enabledTools.filter((tool) =>
+			freeTierGuardrail.isToolAvailableForFreeUsers(tool.config.id as ClineDefaultTool),
+		)
+
+		return freeTierTools
 	}
 
 	public static async getToolsPrompts(variant: PromptVariant, context: SystemPromptContext) {

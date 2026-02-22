@@ -25,6 +25,53 @@ The commit message should:
 4. Be clear and informative`,
 }
 
+const INDONESIAN_LANGUAGE_INSTRUCTION =
+	"Output the commit message in Bahasa Indonesia. Do not use English sentences. Keep the Conventional Commit type prefix (e.g., feat/fix/refactor) in English, but the subject/body text must be in Bahasa Indonesia."
+
+function isLikelyEnglishCommitMessage(text: string): boolean {
+	const s = text.toLowerCase()
+	const englishMarkers = [
+		" the ",
+		" a ",
+		" an ",
+		" and ",
+		" to ",
+		" for ",
+		" with ",
+		" in ",
+		" on ",
+		" add ",
+		" update ",
+		" fix ",
+		" remove ",
+		" refactor ",
+	]
+	const indonesianMarkers = [" yang ", " dan ", " untuk ", " dengan ", " pada ", " dari ", " ke ", " ini ", " itu "]
+	const hasEnglish = englishMarkers.some((m) => s.includes(m))
+	const hasIndonesian = indonesianMarkers.some((m) => s.includes(m))
+	return hasEnglish && !hasIndonesian
+}
+
+async function translateCommitMessageToIndonesian(apiHandler: any, commitMessage: string): Promise<string> {
+	const systemPrompt = `${PROMPT.system}\n\n${INDONESIAN_LANGUAGE_INSTRUCTION}`
+	const messages = [
+		{
+			role: "user" as const,
+			content:
+				"Translate the following git commit message to Bahasa Indonesia. Preserve the Conventional Commit type prefix and optional scope exactly (e.g., 'feat(ui):'). Only translate the subject/body text. Output only the commit message with no preamble or code fences.\n\n" +
+				commitMessage,
+		},
+	]
+
+	let response = ""
+	for await (const chunk of apiHandler.createMessage(systemPrompt, messages)) {
+		if (chunk.type === "text") {
+			response += chunk.text
+		}
+	}
+	return extractCommitMessage(response)
+}
+
 export async function generateCommitMsg(controller: Controller, scm?: vscode.SourceControl) {
 	try {
 		const gitExtension = vscode.extensions.getExtension("vscode.git")?.exports
@@ -160,6 +207,11 @@ async function performCommitMsgGeneration(controller: Controller, gitDiff: strin
 
 		const prompts = [PROMPT.instruction]
 
+		const indonesianCommitMode = !!controller.stateManager.getGlobalSettingsKey("indonesianCommitMode")
+		if (indonesianCommitMode) {
+			prompts.push(INDONESIAN_LANGUAGE_INSTRUCTION)
+		}
+
 		const workspaceManager = await controller.ensureWorkspaceManager()
 		if (workspaceManager) {
 			const workspacesJson = await workspaceManager.buildWorkspacesJson()
@@ -187,7 +239,7 @@ async function performCommitMsgGeneration(controller: Controller, gitDiff: strin
 		const apiHandler = buildApiHandler(apiConfiguration, currentMode)
 
 		// Create a system prompt
-		const systemPrompt = PROMPT.system
+		const systemPrompt = indonesianCommitMode ? `${PROMPT.system}\n\n${INDONESIAN_LANGUAGE_INSTRUCTION}` : PROMPT.system
 
 		// Create a message for the API
 		const messages = [{ role: "user" as const, content: prompt }]
@@ -201,6 +253,17 @@ async function performCommitMsgGeneration(controller: Controller, gitDiff: strin
 			if (chunk.type === "text") {
 				response += chunk.text
 				inputBox.value = extractCommitMessage(response)
+			}
+		}
+
+		if (indonesianCommitMode && inputBox.value && isLikelyEnglishCommitMessage(inputBox.value)) {
+			try {
+				const translated = await translateCommitMessageToIndonesian(apiHandler, inputBox.value)
+				if (translated) {
+					inputBox.value = translated
+				}
+			} catch (error) {
+				Logger.warn("Failed to translate commit message to Indonesian:", error)
 			}
 		}
 
