@@ -26,7 +26,7 @@ The commit message should:
 }
 
 const INDONESIAN_LANGUAGE_INSTRUCTION =
-	"Output the commit message in Bahasa Indonesia. Do not use English sentences. Keep the Conventional Commit type prefix (e.g., feat/fix/refactor) in English, but the subject/body text must be in Bahasa Indonesia."
+	"Output commit message in casual and easy-to-understand Indonesian. Do not use English. Use English prefix for Conventional Commit (feat/fix/refactor), but keep the subject and body in natural Indonesian."
 
 function isLikelyEnglishCommitMessage(text: string): boolean {
 	const s = text.toLowerCase()
